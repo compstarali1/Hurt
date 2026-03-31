@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivia & Ali</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+
+/* MAIN BACKGROUND */
+.bg-slideshow{
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index:0;
+    background-image:url('portrait.png');
+    background-size:cover;
+    background-position:center;
+    opacity:0.6;
+}
+
+/* DARK LAYER */
+.overlay-dark{
+    position:fixed;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:1;
+}
+
+/* CONTENT */
+.content-layer{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding-top:100px;
+}
+
+/* 3D BUTTON */
+.glass-btn{
+    position:fixed;
+    bottom:40px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:3;
+
+    padding:18px 35px;
+    border-radius:25px;
+
+    background:rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+
+    color:white;
+    font-weight:bold;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.9),
+        inset 0 2px 2px rgba(255,255,255,0.3);
+
+    transition:0.3s;
+}
+
+.glass-btn:hover{
+    transform:translateX(-50%) translateY(-5px);
+}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:95%;
+    height:80%;
+    background-image:url('flower.png');
+    background-size:cover;
+    background-position:center;
+    border-radius:15px;
+    display:none;
+    z-index:4;
+    color:white;
+}
+
+/* MODAL CONTENT */
+.modal-content{
+    height:100%;
+    overflow-y:auto;
+    padding:20px;
+    background:rgba(0,0,0,0.6);
+    border-radius:15px;
+}
+
+/* CLOSE BUTTON */
+.close-btn{
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* FLOWERS */
+.flower{
+    position:fixed;
+    top:-10%;
+    z-index:999;
+    font-size:2rem;
+    animation:fall linear infinite;
+    pointer-events:none;
+    opacity:0;
+}
+
+@keyframes fall{
+    to{transform:translateY(110vh)}
+}
+
+body{
+    font-family:'Roboto';
+    color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-slideshow"></div>
+<div class="overlay-dark"></div>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+<source src="bg.mp3" type="audio/mpeg">
+</audio>
+
+<!-- CONTENT -->
+<div class="content-layer">
+<h1 class="text-5xl">Olivia & Ali</h1>
+</div>
+
+<!-- BUTTON -->
+<button class="glass-btn" onclick="openMessage()">Message from Ali</button>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+<span class="close-btn" onclick="closeMessage()">&times;</span>
+<div class="modal-content">
+<p id="messageText"></p>
+</div>
+</div>
+
+<script>
+
+const text = `My Sweet Olivia,
+
+I’m sorry… truly.
+
+I believed you were one of the most genuine and beautiful women I had ever come across — a woman full of life, in her prime, searching for something real with a hopeless romantic like me.
+
+And that romantic… became completely captivated by you.
+
+Your beauty, your presence, your energy — it all felt powerful. But now, my heart feels clouded. I can no longer see your heart clearly through this growing fog of doubt.
+
+At first, everything felt exciting… almost intoxicating. But now, something feels distorted — as if my view of you has been blurred by uncertainty.
+
+So I step back and look at the truth.
+
+A first lie can be harmless.    
+A second demands clarity.    
+But a third changes everything — it forces reflection and truth.
+
+And so, I reflect.
+
+I had built a picture of you — a beautiful woman, someone I felt deeply compatible with, more than anyone around me. I was impressed… even a little unsure at first — but that feeling quickly faded.
+
+Because to me, you felt rare… almost like an angel. Truly. I even found myself thanking God — because somehow, you chose me. 🌹❤️
+
+I grew to care about you more than I expected. So much so, that imagining you as part of my future felt real… almost too real. A connection that made me feel like I belonged to you — and I was proud of that.
+
+I could see us together. It felt right.
+
+But then… reality returned.
+
+It hit me cold — like the silence of space.
+
+And my heart began connecting the dots… leading me to a painful possibility — that your intentions may not align with mine.
+
+Three doubts now remain:
+
+There was never a true, real acknowledgment of me in your presence.    
+You guided me toward watching things instead of building something real.    
+And then plans suddenly changed — bringing uncertainty I cannot ignore.
+
+These patterns feel familiar… and it hurts to even think that way.
+
+I’m tired of being hurt. Tired of questioning something that once felt so real.
+
+So please understand this…
+
+Don’t message me for now. I’m hurt.
+
+But if — by some small chance — I’ve misunderstood you… I won’t erase you. I’ll keep your presence there quietly, and I’ll think deeply before deciding anything further.
+
+Because what I felt… what I believed we had… meant something to me.
+
+Ali`;
+
+/* OPEN */
+function openMessage(){
+    const modal = document.getElementById("modal");
+    const music = document.getElementById("bgMusic");
+
+    modal.style.display = "block";
+    music.currentTime = 0;
+    music.play();
+
+    typeWriter();
+    spawnFlowers();
+}
+
+/* CLOSE */
+function closeMessage(){
+    document.getElementById("modal").style.display = "none";
+    document.getElementById("bgMusic").pause();
+}
+
+/* TYPEWRITER */
+function typeWriter(){
+    const el = document.getElementById("messageText");
+    el.innerHTML = "";
+    let i = 0;
+
+    let interval = setInterval(()=>{
+        el.innerHTML += text.charAt(i);
+        i++;
+        if(i >= text.length) clearInterval(interval);
+    },20);
+}
+
+/* FLOWERS */
+function spawnFlowers(){
+    for(let i=0;i<20;i++){
+        let f = document.createElement("div");
+        f.className="flower";
+        f.innerHTML="🌹";
+        f.style.left=Math.random()*100+"vw";
+        f.style.animationDuration=(5+Math.random()*5)+"s";
+        f.style.opacity=1;
+        document.body.appendChild(f);
+    }
+}
+
+</script>
+
+</body>
+</html>
